@@ -1,7 +1,16 @@
-alex: main.o lexer.o token.o
-	g++ -o alex main.o lexer.o token.o
+objects = alex.o lexer.o token.o
 
-main.o: main.cpp
-	g++ -c main.cpp
+alex: $(objects)
+	g++ -o alex $(objects) -g
 
-lexer.o 
+alex.o: alex.cpp
+	g++ -c alex.cpp -g
+
+lexer.o: lexer.cpp lexer.h
+	g++ -c lexer.cpp -g
+
+token.o: token.cpp token.h
+	g++ -c token.cpp -g
+
+clean: 
+	rm alex $(objects)

@@ -18,3 +18,14 @@ std::ostream& operator<<(std::ostream &os,const Token &token){
     }
     return os;
 }
+
+Token::Token(std::string type_, unsigned line, unsigned column, std::string token) : type_(type_), line_(line), column_(column), token_(token)
+{
+}
+
+Token::Token(){
+}
+
+Token::~Token()
+{
+}
