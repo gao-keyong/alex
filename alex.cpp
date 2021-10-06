@@ -7,6 +7,7 @@ int main(int argc, char const *argv[])
     {
         Lexer lexer(argv[1]);
         bool noerr = lexer.lexer();
+        lexer.printStat();
     }
     else
     {

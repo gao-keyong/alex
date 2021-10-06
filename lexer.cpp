@@ -8,13 +8,14 @@ bool isalpha_(const char ch)
     return isalpha(ch) || ch == '_';
 }
 
-bool isalphadigit_(const char ch){
+bool isalphadigit_(const char ch)
+{
     return isalpha(ch) || isdigit(ch) || ch == '_';
 }
 
 bool isws(const char ch)
 {
-    return ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\n'||ch<=0;
+    return ch == ' ' || ch == '\t' || ch == '\v' || ch == '\f' || ch == '\n' || ch <= 0;
 }
 
 bool ise(const char ch)
@@ -31,6 +32,9 @@ Lexer::Lexer(std::string fileName) : fileName_(fileName), countChar_(0), countLi
 {
     sourceFile_.open(fileName);
     assert(sourceFile_.is_open());
+#define TOKEN_TYPE(TYP) count_##TYP = 0;
+#include "def/TOKEN_TYPE.def"
+#undef TOKEN_TYPE
     buffer_.clear();
 }
 
@@ -91,6 +95,7 @@ bool Lexer::lexer()
                         {
                             has_error = true;
                             token.setType("Error");
+                            count_Error++;
                         }
                     }
                     break;
@@ -163,10 +168,11 @@ bool Lexer::lexer()
                 case '?':
                     break;
                 case '#':
-                    is_comment=true;
-                    do{
-                        ch=eatChar();
-                    }while(ch!='\n');
+                    is_comment = true;
+                    do
+                    {
+                        ch = eatChar();
+                    } while (ch != '\n');
                     break;
                 case '/':
                     ch = peekChar();
@@ -244,16 +250,33 @@ bool Lexer::lexer()
                     break;
                 }
                 res &= !has_error;
-                if (!is_comment){
+                if (!is_comment)
+                {
                     token.setToken(buffer_);
+                    if (token.getType() == "Punctuator")
+                    {
+                        count_Punctuator++;
+                    }
                     std::cout << token << std::endl;
                 }
             }
-            else{
+            else
+            {
                 eatChar();
             }
         }
         buffer_.clear();
     }
     return res;
+}
+
+void Lexer::printStat()
+{
+    std::cout << std::endl;
+    std::cout << "Total characters:\t" << countChar_ - 1 << std::endl;
+    std::cout << "Total lines:\t\t" << countLine_ << std::endl
+              << std::endl;
+#define TOKEN_TYPE(TYP) std::cout << #TYP << ":\t" << count_##TYP << std::endl;
+#include "def/TOKEN_TYPE.def"
+#undef TOKEN_TYPE
 }

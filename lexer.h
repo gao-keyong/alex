@@ -22,6 +22,9 @@ private:
     unsigned countChar_;
     unsigned countLine_;
     unsigned countColumn_;
+#define TOKEN_TYPE(TYP) unsigned count_##TYP;
+#include "def/TOKEN_TYPE.def"
+#undef TOKEN_TYPE
     std::string buffer_;
     void getNextIdentifier(Token &token)
     {
@@ -39,9 +42,13 @@ private:
         } while (true);
 #define KEYWORD(TOK)     \
     if (buffer_ == #TOK) \
-        token.setType("Keyword");
+        token.setType("Keyword"), count_Keyword++;
 #include "def/KEYWORD.def"
 #undef KEYWORD
+        if (token.getType() == "Identifier")
+        {
+            count_Identifier++;
+        }
         token.setToken(buffer_);
     }
     void getNextNumerical(Token &token)
@@ -153,65 +160,108 @@ private:
             }
         } while (state != 0);
         token.setToken(buffer_);
+        if (token.getType() == "Numerical_Constant")
+        {
+            count_Numerical_Constant++;
+        }
     }
-    void getCharConstant(Token &token){
+    void getCharConstant(Token &token)
+    {
         token.setType("Char_Constant");
         eatChar();
-        unsigned state=1;
+        unsigned state = 1;
         char ch;
-        do{
-            switch(state){
-                case 1:
-                    ch=peekChar();
-                    if(ch=='\\'){
-                        state=3; eatChar();
-                    }else if(ch=='\''){
-                        state=0; eatChar();
-                    }else{
-                        state=2; eatChar();
-                    }
-                    break;
-                case 2:
-                    ch=peekChar();
-                    if(ch=='\''){
-                        state=0; eatChar();
-                    }else{
-                        state=0;
-                    }
-                    break;
-                case 3:
-                    state=2; eatChar();
-                    break;
-                default: break;
+        do
+        {
+            switch (state)
+            {
+            case 1:
+                ch = peekChar();
+                if (ch == '\\')
+                {
+                    state = 3;
+                    eatChar();
+                }
+                else if (ch == '\'')
+                {
+                    state = 0;
+                    eatChar();
+                }
+                else
+                {
+                    state = 2;
+                    eatChar();
+                }
+                break;
+            case 2:
+                ch = peekChar();
+                if (ch == '\'')
+                {
+                    state = 0;
+                    eatChar();
+                }
+                else
+                {
+                    state = 0;
+                }
+                break;
+            case 3:
+                state = 2;
+                eatChar();
+                break;
+            default:
+                break;
             }
-        }while(state!=0);
+        } while (state != 0);
         token.setToken(buffer_);
+        if (token.getType() == "Char_Constant")
+        {
+            count_Char_Constant++;
+        }
     }
-    void getStringLiteral(Token &token){
+    void getStringLiteral(Token &token)
+    {
         token.setType("String_Literal");
         eatChar();
-        unsigned state=1;
+        unsigned state = 1;
         char ch;
-        do{
-            switch(state){
-                case 1:
-                    ch=peekChar();
-                    if(ch=='\\'){
-                        state=2; eatChar();
-                    }else if(ch=='\"'){
-                        state=0; eatChar();
-                    }else{
-                        state=1; eatChar();
-                    }
-                    break;
-                case 2:
-                    state=1; eatChar();
-                    break;
-                default: break;
+        do
+        {
+            switch (state)
+            {
+            case 1:
+                ch = peekChar();
+                if (ch == '\\')
+                {
+                    state = 2;
+                    eatChar();
+                }
+                else if (ch == '\"')
+                {
+                    state = 0;
+                    eatChar();
+                }
+                else
+                {
+                    state = 1;
+                    eatChar();
+                }
+                break;
+            case 2:
+                state = 1;
+                eatChar();
+                break;
+            default:
+                break;
             }
-        }while(state!=0);
+        } while (state != 0);
         token.setToken(buffer_);
+        if (token.getType() == "String_Literal")
+        {
+            count_String_Literal++;
+        }
     }
+
 public:
     Lexer(std::string fileName);
     ~Lexer();
@@ -219,7 +269,8 @@ public:
     char eatChar()
     {
         char ch = sourceFile_.get();
-        if(ch>=0) buffer_.push_back(ch);
+        if (ch >= 0)
+            buffer_.push_back(ch);
         if (ch == '\n')
         {
             countLine_++;
@@ -236,6 +287,7 @@ public:
     {
         return sourceFile_.peek();
     }
+    void printStat();
 };
 
 #endif
