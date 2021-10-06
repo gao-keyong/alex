@@ -63,6 +63,17 @@ private:
             {
             case 0:
                 break;
+            case 1:
+                ch = peekChar();
+                if (isalpha_(ch))
+                {
+                    state = 1;
+                    eatChar();
+                }
+                else
+                {
+                    state = 0;
+                }
             case 2:
                 ch = peekChar();
                 if (isdigit(ch))
@@ -78,6 +89,14 @@ private:
                 else if (ise(ch))
                 {
                     state = 5;
+                    eatChar();
+                }
+                else if (isalpha_(ch))
+                {
+                    token.setType("Error");
+                    token.setError("illegal name");
+                    count_Error++;
+                    state = 1;
                     eatChar();
                 }
                 else
@@ -241,6 +260,13 @@ private:
                     state = 0;
                     eatChar();
                 }
+                else if (ch == '\n')
+                {
+                    token.setType("Error");
+                    token.setError("unclosed string");
+                    count_Error++;
+                    state = 0;
+                }
                 else
                 {
                     state = 1;
@@ -271,6 +297,10 @@ public:
         char ch = sourceFile_.get();
         if (ch >= 0)
             buffer_.push_back(ch);
+        else
+        {
+            return 0;
+        }
         if (ch == '\n')
         {
             countLine_++;

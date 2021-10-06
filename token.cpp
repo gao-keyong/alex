@@ -15,15 +15,21 @@ void Token::setToken(std::string token)
     token_ = token;
 }
 
+void Token::setError(std::string error)
+{
+    error_ = error;
+}
+
 std::ostream &operator<<(std::ostream &os, const Token &token)
 {
-    if (token.type_ != "Unknown")
+    if (token.type_ != "Error")
     {
         os << token.line_ << ':' << token.column_ << ": [" << token.type_ << ": " << token.token_ << "]";
     }
     else
     {
-        os << token.line_ << ":" << token.column_ << ": [" << token.type_ << ": " << token.token_ << "]";
+        os << "\033[1m" << token.line_ << ":" << token.column_ << ": "
+           << "\033[31mError: \033[32m" << token.error_ << "\033[39m " << token.token_ << "\033[0m";
     }
     return os;
 }

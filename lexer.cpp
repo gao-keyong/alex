@@ -95,7 +95,6 @@ bool Lexer::lexer()
                         {
                             has_error = true;
                             token.setType("Error");
-                            count_Error++;
                         }
                     }
                     break;
@@ -183,6 +182,8 @@ bool Lexer::lexer()
                         do
                         {
                             ch = peekChar();
+                            if (ch <= 0)
+                                state = 5;
                             switch (state)
                             {
                             case 1:
@@ -239,6 +240,10 @@ bool Lexer::lexer()
                                 }
                                 break;
                             default:
+                                state = 0;
+                                token.setType("Error");
+                                token.setError("unterminated comment");
+                                count_Error++;
                                 break;
                             }
                         } while (state != 0);
@@ -247,18 +252,19 @@ bool Lexer::lexer()
                         eatChar();
                     break;
                 default:
+                    token.setType("Error");
+                    token.setError("unexpected character");
+                    count_Error++;
+                    token.setToken(buffer_);
                     break;
                 }
                 res &= !has_error;
-                if (!is_comment)
+                if (token.getType() == "Punctuator")
                 {
-                    token.setToken(buffer_);
-                    if (token.getType() == "Punctuator")
-                    {
-                        count_Punctuator++;
-                    }
-                    std::cout << token << std::endl;
+                    count_Punctuator++;
                 }
+                token.setToken(buffer_);
+                std::cout << token << std::endl;
             }
             else
             {
@@ -273,7 +279,7 @@ bool Lexer::lexer()
 void Lexer::printStat()
 {
     std::cout << std::endl;
-    std::cout << "Total characters:\t" << countChar_ - 1 << std::endl;
+    std::cout << "Total characters:\t" << countChar_ << std::endl;
     std::cout << "Total lines:\t\t" << countLine_ << std::endl
               << std::endl;
 #define TOKEN_TYPE(TYP) std::cout << #TYP << ":\t" << count_##TYP << std::endl;
