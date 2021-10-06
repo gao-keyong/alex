@@ -8,6 +8,8 @@
 
 bool isalpha_(const char ch);
 
+bool isalphadigit_(const char ch);
+
 bool ise(const char ch);
 
 bool issign(const char ch);
@@ -24,10 +26,11 @@ private:
     void getNextIdentifier(Token &token)
     {
         token.setType("Identifier");
+        eatChar();
         do
         {
             char ch = peekChar();
-            if (isalpha_(ch))
+            if (isalphadigit_(ch))
             {
                 eatChar();
             }
@@ -44,6 +47,7 @@ private:
     void getNextNumerical(Token &token)
     {
         token.setType("Numerical_Constant");
+        eatChar();
         unsigned state = 2;
         char ch;
         do
@@ -152,6 +156,7 @@ private:
     }
     void getCharConstant(Token &token){
         token.setType("Char_Constant");
+        eatChar();
         unsigned state=1;
         char ch;
         do{
@@ -184,6 +189,7 @@ private:
     }
     void getStringLiteral(Token &token){
         token.setType("String_Literal");
+        eatChar();
         unsigned state=1;
         char ch;
         do{
@@ -213,7 +219,7 @@ public:
     char eatChar()
     {
         char ch = sourceFile_.get();
-        buffer_.push_back(ch);
+        if(ch>=0) buffer_.push_back(ch);
         if (ch == '\n')
         {
             countLine_++;
