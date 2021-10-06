@@ -13,4 +13,4 @@ token.o: token.cpp token.h
 	g++ -c token.cpp -g
 
 clean: 
-	rm alex $(objects)
+	rm $(objects)
