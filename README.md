@@ -47,7 +47,7 @@ x86_64-pc-linux-gnu
 ├── token.h             标记类声明
 ├── Makefile            工程文件规则
 ├── README.md           Markdown文档
-├── README.html         HTML文档
+├── README.pdf          PDF文档
 ├── def
 │   ├── KEYWORD.def     关键词集合
 │   ├── PUNCTUATOR.def  标点符号集合
@@ -72,9 +72,13 @@ x86_64-pc-linux-gnu
 
 * Keyword: 关键词。C中的保留字。
 * Identifier: 标识符。变量名或函数名。
+
 ![Graph_1.jpg](graph/Graph_1.jpg)
+
 * Numerical_Constant: 数值常量。
+
 ![Graph_2.jpg](graph/Graph_2.jpg)
+
 * Char_Constant: 字符常量。如`'a'`。
 * String_Literal: 字符串常量。如`"bupt\n"`。
 * Punctuator: 运算符。
@@ -96,7 +100,7 @@ x86_64-pc-linux-gnu
 #### 1.4.1.1. 没有词法错误的程序`test/test1.c`
 
 ```
-❯ ./alex test/test1.c
+> ./alex test/test1.c
 4:1: [Keyword: int]
 4:5: [Identifier: main]
 4:9: [Punctuator: (]
@@ -161,7 +165,7 @@ int main()
 #### 1.4.2.1. 没有词法错误的程序`flex/test1.c`
 
 ```
-❯ ./c11 < test1.c
+> ./c11 < test1.c
 4:1: [Keyword: int]
 4:5: [Identifier: main]
 4:9: [Punctuator: (]
