@@ -58,8 +58,8 @@ void Lexer::getNextIdentifier(Token &token)
     } while (true);
 // 特判该token是否为关键词Keyword
 #define KEYWORD(TOK)     \
-if (buffer_ == #TOK) \
-    token.setType("Keyword"), count_Keyword++;
+    if (buffer_ == #TOK) \
+        token.setType("Keyword"), count_Keyword++;
 #include "def/KEYWORD.def"
 #undef KEYWORD
     if (token.getType() == "Identifier")
@@ -529,12 +529,19 @@ bool Lexer::lexer()
                     break;
                 }
                 res &= !has_error;
-                if (token.getType() == "Punctuator")
+                if (!is_comment)
                 {
-                    count_Punctuator++;
+                    if (token.getType() == "Punctuator")
+                    {
+                        count_Punctuator++;
+                    }
+                    token.setToken(buffer_);
+                    std::cout << token << std::endl;
                 }
-                token.setToken(buffer_);
-                std::cout << token << std::endl;
+                else if (has_error)
+                {
+                    std::cout << token << std::endl;
+                }
             }
             else
             {
