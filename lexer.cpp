@@ -178,6 +178,7 @@ bool Lexer::lexer()
                     if (ch == '*' || ch == '/')
                     {
                         is_comment = true;
+                        // 识别注释的自动机，其状态转移图为Graph_2.jpg
                         unsigned state = 1;
                         do
                         {
