@@ -52,4 +52,4 @@ Errors:         0
 
 # `test2.c`
 
-![test22.c](../test22.png)
+![test22.c](../test/test22.png)
