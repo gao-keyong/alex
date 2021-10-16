@@ -225,3 +225,9 @@ int main()
 ```
 
 ![](test/test22.png)
+
+## 参考资源
+
+* [name1e5s/cLex](https://github.com/name1e5s/cLex)
+* [ANSI C grammar, Lex specification](https://www.lysator.liu.se/c/ANSI-C-grammar-l.html)
+* [N1570, the final draft of C1X, dated 12 April 2011](http://www.open-std.org/jtc1/sc22/wg14/www/docs/n1570.pdf)
